@@ -20,15 +20,14 @@ let cascadeList = [];
 let canvas;
 let app;
 let rfhCascade = {'Pin':-20,
-                  'Fc':1000,
-                  'BW':100,
+                  'startF':1000,
+                  'stopF':2000,
+                  'stepF':10,
                   'Funits':'MHz',
                   'plotActive':false,
                   'dataOutput':[],
                   'plotSVGWidth' : 960,
   		            'plotSVGHeight' : 700,
-                  'domMax': 100,
-  		            'domMin': 0,
                   'plotFrozen':false,
                   'dataOutputFreeze':[],
                   'nameArray':[]
@@ -104,7 +103,7 @@ document.addEventListener("DOMContentLoaded",function () {
                i++;
              }
              //clearPlot();
-             app.view.getFigure(0).setText("RESULTS");
+            //app.view.getFigure(0).setText("RESULTS");
            }
            //FIX clearPlot
            clearPlot();
@@ -114,10 +113,10 @@ document.addEventListener("DOMContentLoaded",function () {
            console.log(connectionList);
          });
          connection.on("added",function(){
-           let a = alignCascade(connection.canvas.getFigures().data.length-1); //pass number of parts
+           let a = alignCascade(connection.canvas.getFigures().data.length); //pass number of parts
            if (a[0]  == 0) {
              console.log('ready to calculate');
-             calcCascade(a[1]);
+             //calcCascade(a[1]);
            }
            else {
              console.log('not ready');
@@ -152,9 +151,9 @@ figure.getPort("input0").on("disconnect", function(p) {p.setVisible(true)});
 figure.setUserData({Name:"Output"});
 app.view.add(figure,500,100);
 
-var msg = new draw2d.shape.note.PostIt({id:0,text:"RESULTS", x:400, y:100});
-msg.setDeleteable(false);
-app.view.add(msg,600,100);
+//var msg = new draw2d.shape.note.PostIt({id:0,text:"RESULTS", x:400, y:100});
+//msg.setDeleteable(false);
+//app.view.add(msg,600,100);
 
 });
 ///View portion of Code///////////
@@ -257,6 +256,7 @@ function alignCascade(numParts) {
     error = 5; //unconnected part
     return error;
   }
+  // 1 is input port and 2 is output port
   while (cascadeList.length != numParts-2) {
     connectionList.forEach(function(cList) {
       if(cList.split(",")[1] == nextPart) {
@@ -343,7 +343,7 @@ function calcCascade(list) {
     }
   });
   partX.push(xtick);
-  let results = "RESULTS \n Gain = "+Gdb.toFixed(2)+" dB \n NF = "+NF.toFixed(2)+" dB \n OP1dB = "+P1.toFixed(2)+" dB \n OIP3 = "+IP.toFixed(2)+" dB";
+  //let results = "RESULTS \n Gain = "+Gdb.toFixed(2)+" dB \n NF = "+NF.toFixed(2)+" dB \n OP1dB = "+P1.toFixed(2)+" dB \n OIP3 = "+IP.toFixed(2)+" dB";
   app.view.getFigure(0).setText(results);
   rfhCascade.plotActive = true;
   plotData('new');
@@ -411,9 +411,9 @@ function saveProperties() {
   }
   device.getChildren().first().setText($('#deviceNameInput').val());
   $('#partPropsModal').modal('hide');
-  let a = alignCascade(app.view.getFigures().data.length-1);
+  let a = alignCascade(app.view.getFigures().data.length);
   if (a[0]  == 0) {
-    calcCascade(a[1]);
+    //calcCascade(a[1]);
   }
   else {
     console.log('not ready');
@@ -609,14 +609,14 @@ let idArray = [];
        else {
          i++;
        }
-       app.view.getFigure(0).setText("RESULTS");
+      // app.view.getFigure(0).setText("RESULTS");
      }
    });
 
 });
-    let a = alignCascade(app.view.getFigures().data.length-1);
+    let a = alignCascade(app.view.getFigures().data.length);
     if (a[0]  == 0) {
-      calcCascade(a[1]);
+      //calcCascade(a[1]);
     }
     else {
       console.log('not ready');

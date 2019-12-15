@@ -12,6 +12,7 @@
     "electron-builder": "^22.2.0"
   },
   "dependencies": {
+    "draw2d": "^1.0.19",
     "lodash": "^4.17.15",
     "mathjs": "^6.2.5"
   },

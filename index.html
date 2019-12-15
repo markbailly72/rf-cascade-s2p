@@ -1,6 +1,6 @@
 <html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
-  <title>RF Cascade App</title>
+  <title>RF Cascade s2p App</title>
   <meta name="viewport" content="width=device-width, minimum-scale=1.0" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
@@ -40,15 +40,15 @@
       <div class="col-md-12"><h4>Parts Pallette</h4></div>
       <div class="col-md-12" style="font-size:small">Drag part onto the schematic page.</div>
       <div class="col-md-12">
-        <div data-shape="draw2d.shape.analog.GenericBlock" data-params='3,3,10,20,12,5' class="float-left col-md-2 palette_node_element draw2d_droppable" title="drag&amp;drop the part onto the schematic..">Block</div>
-        <div data-shape="draw2d.shape.analog.Amplifier"  data-params='15,1,15,25,17,10' class="float-left col-md-2 palette_node_element draw2d_droppable" title="drag&amp;drop the part onto the schematic..">Amplifier</div>
+        <div data-shape="draw2d.shape.analog.GenericBlock" data-params='generic-amp.s2p' class="float-left col-md-2 palette_node_element draw2d_droppable" title="drag&amp;drop the part onto the schematic..">Block</div>
+        <!-- <div data-shape="draw2d.shape.analog.Amplifier"  data-params='15,1,15,25,17,10' class="float-left col-md-2 palette_node_element draw2d_droppable" title="drag&amp;drop the part onto the schematic..">Amplifier</div>
         <div data-shape="draw2d.shape.analog.Attenuator"  data-params='-3,3,100,110,100,30' class="float-left col-md-2 palette_node_element draw2d_droppable" title="drag&amp;drop the part onto the schematic..">Atten</div>
         <div data-shape="draw2d.shape.analog.DirectionalCoupler"  data-params='-0.5,0.5,100,110,100,33' class="float-left col-md-2 palette_node_element draw2d_droppable" title="drag&amp;drop the part onto the schematic..">Dir Coupler</div>
         <div data-shape="draw2d.shape.analog.Filter"  data-params='-2,2,100,110,100,33' class="float-left col-md-2 palette_node_element draw2d_droppable" title="drag&amp;drop the part onto the schematic..">Filter</div>
         <div data-shape="draw2d.shape.analog.HybridCoupler"  data-params='-0.5,0.5,100,110,100,33' class="float-left col-md-2 palette_node_element draw2d_droppable" title="drag&amp;drop the part onto the schematic..">Hyb Coupler</div>
         <div data-shape="draw2d.shape.analog.Mixer"  data-params='-5,5,10,20,12,0' class="float-left col-md-2 palette_node_element draw2d_droppable" title="drag&amp;drop the part onto the schematic..">Mixer</div>
         <div data-shape="draw2d.shape.analog.Splitter"  data-params='-0.5,0.5,100,110,100,33' class="float-left col-md-2 palette_node_element draw2d_droppable" title="drag&amp;drop the part onto the schematic..">Splitter</div>
-        <div data-shape="draw2d.shape.analog.Spdt"  data-params='-0.5,0.5,10,20,12,10' class="float-left col-md-2 palette_node_element draw2d_droppable" title="drag&amp;drop the part onto the schematic..">SPDT</div>
+        <div data-shape="draw2d.shape.analog.Spdt"  data-params='-0.5,0.5,10,20,12,10' class="float-left col-md-2 palette_node_element draw2d_droppable" title="drag&amp;drop the part onto the schematic..">SPDT</div> -->
     </div>
   </div>
     <div class="row border border-primary">
@@ -56,14 +56,14 @@
         <h4>Results</h4>
       </div>
         <div class="col-md-4">
-          <select id="plotTypeSelect" class="form-control" style="float:left">
+          <!-- <select id="plotTypeSelect" class="form-control" style="float:left">
             <option value="op1db" selected="selected">Output P1dB</option>
             <option value="ip1db">Input P1dB</option>
             <option value="nf">Noise Figure</option>
             <option value="oip3">Output IP3</option>
             <option value="iip3">Input IP3</option>
             <option value="power">Power</option>
-          </select>
+          </select> -->
         </div>
         <div id="dataPlotDiv" class="col-md-12"></div>
       </div>
@@ -87,18 +87,18 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label for="deviceGainInput" class="col-sm-5 col-form-label">Gain (dB)</label>
+                <label for="deviceFile" class="col-sm-5 col-form-label">s2p File</label>
                 <div class="col-sm-3">
-                  <input type="text" id="deviceGainInput" data-rfh-validate-type="float" value="10" class="form-control">
+                  <input type="text" id="deviceFile" data-rfh-validate-type="none" value="generic-amp.s2p" class="form-control">
                 </div>
               </div>
-              <div class="form-group row">
+              <!-- <div class="form-group row">
                 <label for="deviceNFInput" class="col-sm-5 col-form-label">Noise Figure (dB)</label>
                 <div class="col-sm-3">
                   <input type="text" id="deviceNFInput" data-rfh-validate-type="float" data-rfh-validate-value="0" value="1" class="form-control">
                 </div>
-              </div>
-              <div class="form-group row">
+              </div> -->
+              <!-- <div class="form-group row">
                 <label for="deviceP1Input" class="col-sm-5 col-form-label">Output P1dB (dBm)</label>
                 <div class="col-sm-3">
                   <input type="text" id="deviceP1Input" data-rfh-validate-type="float" value="20" class="form-control">
@@ -121,7 +121,7 @@
                 <div class="col-sm-3">
                   <input type="text" id="devicePmaxInput" data-rfh-validate-type="float" value="20" class="form-control">
                 </div>
-              </div>
+              </div> -->
               <div class="form-group row">
                 <div class="col-sm-8">
                   <div class="form-check">
@@ -149,9 +149,21 @@
               <div class="modal-body">
                 <form id="rfhSettingsForm">
                   <div class="form-group row">
-                    <label for="powerInput" class="col-sm-5 col-form-label">Input Power</label>
+                    <label for="startFInput" class="col-sm-5 col-form-label">Start Frequency (MHz)</label>
                     <div class="col-sm-3">
-                      <input type="text" id="powerInput" data-rfh-validate-type="none" value="-20" class="form-control">
+                      <input type="text" id="startFInput" data-rfh-validate-type="none" value="1000" class="form-control">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="stopFInput" class="col-sm-5 col-form-label">Stop Frequency (MHz)</label>
+                    <div class="col-sm-3">
+                      <input type="text" id="stopFInput" data-rfh-validate-type="none" value="2000" class="form-control">
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="stepFInput" class="col-sm-5 col-form-label">Frequency Step (MHz)</label>
+                    <div class="col-sm-3">
+                      <input type="text" id="stepFInput" data-rfh-validate-type="none" value="10" class="form-control">
                     </div>
                   </div>
                 </form>
