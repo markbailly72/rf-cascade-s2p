@@ -1,0 +1,30 @@
+{
+  "name": "rf-cascade",
+  "version": "0.1.0",
+  "description": "RF Cascade Analysis of s2p Files",
+  "main": "main.js",
+  "repository": "https://github.com/markbailly72/rf-cascade-s2p.git",
+  "author": "Mark Bailly",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "electron": "^7.1.5",
+    "electron-builder": "^22.2.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.15",
+    "mathjs": "^6.2.5"
+  },
+  "build": {
+    "appId": "RFCascade",
+    "productName": "RF Cascade",
+    "win": {
+      "target": "nsis"
+    }
+  },
+  "scripts": {
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "start": "electron ."
+  }
+}
