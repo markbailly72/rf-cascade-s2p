@@ -1,0 +1,30 @@
+* {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+#canvas {
+	height:400px;
+	width: 1000px;
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
+	position: relative;
+	top: 0px;
+	right: 0px;
+	left: 0px;
+	bottom: 0px;
+	overflow: scroll;
+	background-color: #FFFFFF;
+}
+.palette_node_element {
+	border: 1px solid gray;
+	background-color: #f3f3f3;
+	/* padding: 5px; */
+	cursor: move;
+	/* width: 100px; */
+	/* margin: 30px auto 30px auto;  */
+	text-align: center;
+	/* align: left; */
+	border-radius: 5px;
+}
