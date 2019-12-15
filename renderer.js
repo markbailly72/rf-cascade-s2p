@@ -14,13 +14,11 @@ let numLines = 0;
 let lineID = 1;
 let partID = 3;
 let lineList = [];
-let partList = [];
 let connectionList = [];
 let cascadeList = [];
 let canvas;
 let app;
-let rfhCascade = {'Pin':-20,
-                  'startF':1000,
+let rfhCascade = {'startF':1000,
                   'stopF':2000,
                   'stepF':10,
                   'Funits':'MHz',
@@ -43,7 +41,9 @@ ipcRenderer.on( 'channel1', (e, args) => {
     openFile();
   }
   if (args.action === 'settings') {
-    $('#powerInput').val(rfhCascade.Pin);
+    $('#startFInput').val(rfhCascade.startF);
+    $('#stopFInput').val(rfhCascade.stopF);
+    $('#stepFInput').val(rfhCascade.stepF);
     $('#settingsModal').modal('show');
   }
 })
@@ -191,7 +191,7 @@ rfh.View = draw2d.Canvas.extend({
       console.log(params);
 			var label = new draw2d.shape.basic.Label({text:"Part"+partID, color:"#0d0d0d", fontColor:"#0d0d0d",stroke:0});
 		  figure.add(label, new draw2d.layout.locator.TopLocator(figure));
-			figure.setUserData({Name:"Part"+partID,G:params[0],NF:params[1],P1db:params[2],IP3:params[3],Psat:params[4],Pmax:params[5],disabled:false});
+			figure.setUserData({Name:"Part"+partID,File:params[0],disabled:false});
 			figure.setWidth(100);
 			figure.setResizeable(false);
 			figure.setBackgroundColor('#ffffff');
@@ -205,12 +205,7 @@ rfh.View = draw2d.Canvas.extend({
 	      $('#myModalLabel03').text(figure.getUserData().Name+" Properties")
         originalName = figure.getUserData().Name;
 	      $('#deviceNameInput').val(figure.getUserData().Name);
-	      $('#deviceGainInput').val(figure.getUserData().G);
-	      $('#deviceNFInput').val(figure.getUserData().NF);
-	      $('#deviceP1Input').val(figure.getUserData().P1db);
-	      $('#deviceIp3Input').val(figure.getUserData().IP3);
-	      $('#devicePsatInput').val(figure.getUserData().Psat);
-	      $('#devicePmaxInput').val(figure.getUserData().Pmax);
+	      $('#deviceFileInput').val(figure.getUserData().File);
 	      $('#partPropsModal').modal('show');
 				if (figure.getUserData().disabled){
 					$('#disableDeviceCB').prop("checked",true);
@@ -269,22 +264,6 @@ function alignCascade(numParts) {
   }
   return [error,cascadeList];
 }
-// function checkInOut() {
-//   let isConnectedOut = false;
-//   let isConnectedIn = false;
-//   let list = [];
-//   connectionList.forEach(function(cList) {
-//     list.push(cList.split(",")[1]);
-//     list.push(cList.split(",")[2]);
-//   });
-//   if (list.includes("1")) {
-//     isConnectedIn = true;
-//   }
-//   if (list.includes("2")) {
-//     isConnectedOut = true;
-//   }
-//   return [isConnectedIn,isConnectedOut];
-// }
 function calcCascade(list) {
   var deviceArray = [];
 	var partNames = [],partOP1db = [],partIP1db = [],partNF = [],partIIP3 = [],partOIP3 = [], partPower= [];
@@ -357,36 +336,22 @@ function validateInputs(form,callBack) {
       return;
     }
   }
-  if (isNaN($('#deviceGainInput').val())) {
+  if (isNaN($('#startFInput').val())) {
     noErrors = false
-    $('#deviceGainInput').focus();
+    $('#startFInput').focus();
     return;
   }
-  if($('#deviceNFInput').val() < 0) {
+  if (isNaN($('#stopFInput').val())) {
     noErrors = false
-    $('#deviceNFInput').focus();
+    $('#stopFInput').focus();
     return;
   }
-  if (isNaN($('#deviceP1Input').val())) {
+  if (isNaN($('#stepFInput').val())) {
     noErrors = false
-    $('#deviceP1Input').focus();
+    $('#staepFInput').focus();
     return;
   }
-  if (isNaN($('#deviceIp3Input').val())) {
-    noErrors = false
-    $('#deviceIp3Input').focus();
-    return;
-  }
-  if (isNaN($('#devicePsatInput').val())) {
-    noErrors = false
-    $('#devicePsatInput').focus();
-    return;
-  }
-  if (isNaN($('#devicePmaxInput').val())) {
-    noErrors = false
-    $('#devicePmaxInput').focus();
-    return;
-  }
+
 	if (noErrors) {
 		callBack();
 	}
@@ -395,12 +360,7 @@ function saveProperties() {
 	var device = app.view.getFigure(activeDevice);
 	device.setUserData({
     Name:$('#deviceNameInput').val(),
-    G:$('#deviceGainInput').val(),
-    NF:$('#deviceNFInput').val(),
-    P1db:$('#deviceP1Input').val(),
-    IP3:$('#deviceIp3Input').val(),
-    Psat:$('#devicePsatInput').val(),
-    Pmax:$('#devicePmaxInput').val(),
+    File:$('#deviceFileInput').val(),
     disabled:$('#disableDeviceCB').prop("checked")
   });
   if($('#disableDeviceCB').prop("checked")){
@@ -420,70 +380,13 @@ function saveProperties() {
   }
 }
 function saveMainSettings() {
-  rfhCascade.Pin = $('#powerInput').val();
+  rfhCascade.startF = $('#startFInput').val();
+  rfhCascade.stopF = $('#stopFInput').val();
+  rfhCascade.stepF = $('#stepFInput').val();
   $('#settingsModal').modal('hide');
 }
 function plotData(action) {
-  var param = $('#plotTypeSelect').val();
-  if (param == "") {
-    param = "op1db";
-    document.getElementById('plotTypeSelect').selectedIndex = "0";
-  }
-  var partX = [], partX2 = [];
-	var partNames = [], partData = [], partDataFreeze = [], xWidth, xTickSize;
-  console.log(rfhCascade.dataOutput);
-  rfhCascade.dataOutput.forEach(function(dataOut) {
-    partNames.push(dataOut.name);
-    partData.push(dataOut[param]);
-  });
-  let j=0;
-  partNames.forEach(function(partName) {
-    j = j+100;
-    partX.push(j);
-  });
-	if (rfhCascade.plotFrozen) {
-		for (let i=0;i<rfhCascade.dataOutputFreeze.length;i++) {
-			partDataFreeze.push(rfhCascade.dataOutputFreeze[i][param]);
-      var trace1 = {x:partNames,y:partDataFreeze};
-		}
-  }
-  var trace2 = {x:partNames,y:partData};
-
-  var data = rfhCascade.plotFrozen ? [trace1,trace2]:[trace2];
-  var layout = {
-    title: 'Cascade',
-    xaxis: {
-      title: 'Part',
-      titlefont: {
-        family: 'Courier New, monospace',
-        size: 18,
-        color: '#7f7f7f',
-        showlines: true,
-        zeroline: true
-      }
-    },
-    yaxis: {
-      title: $( "#plotTypeSelect option:selected" ).text(),
-      titlefont: {
-        family: 'Courier New, monospace',
-        size: 18,
-        color: '#7f7f7f',
-        showlines: true,
-        zeroline: true
-      }
-    }
-  };
-  if (action == 'new') {
-    Plotly.newPlot('dataPlotDiv', data,layout,{displaylogo: false, editable:true, modeBarButtonsToRemove:['sendDataToCloud','pan2d','select2d','lasso2d','hoverClosestCartesian','hoverCompareCartesian','toggleSpikelines']});
-    console.log(data);
-    rfhCascade.dataOutputFreeze = rfhCascade.dataOutput;
-  //  rfhCascade.dataOutput =[];
-  }
-  if (action == 'update') {
-   Plotly.purge('dataPlotDiv');
-    console.log(data);
-    Plotly.newPlot('dataPlotDiv', data,layout,{displaylogo: false, editable:true,modeBarButtonsToRemove:['sendDataToCloud','pan2d','select2d','lasso2d','hoverClosestCartesian','hoverCompareCartesian','toggleSpikelines']});
-  }
+  //get code from s2p-quick-plot
 }
 function plotUpdate() {
   var param = $('#plotTypeSelect').val();
@@ -571,12 +474,7 @@ let idArray = [];
        activeDevice = e.getId();
        $('#myModalLabel').text(e.getUserData().Name+" Properties")
 	       $('#deviceNameInput').val(e.getUserData().Name);
-	       $('#deviceGainInput').val(e.getUserData().G);
-	       $('#deviceNFInput').val(e.getUserData().NF);
-	       $('#deviceP1Input').val(e.getUserData().P1db);
-	       $('#deviceIp3Input').val(e.getUserData().IP3);
-	       $('#devicePsatInput').val(e.getUserData().Psat);
-	       $('#devicePmaxInput').val(e.getUserData().Pmax);
+	       $('#deviceFileInput').val(e.getUserData().File);
 	       $('#partPropsModal').modal('show');
      });
      e.on("click", function() {
